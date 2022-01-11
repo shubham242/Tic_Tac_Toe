@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tic_tac_toe/screens/playboard.dart';
+import 'package:tic_tac_toe/screens/home.dart';
+import 'package:tic_tac_toe/screens/login.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -13,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PlayBoard(),
+      home: FirebaseAuth.instance.currentUser != null ? Home() : Login(),
     );
   }
 }

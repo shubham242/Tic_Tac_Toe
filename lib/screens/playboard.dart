@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tic_tac_toe/game_intelligence.dart';
+import 'package:tic_tac_toe/utilities/game_intelligence.dart';
 
 class PlayBoard extends StatefulWidget {
   @override
@@ -37,7 +37,7 @@ class _PlayBoardState extends State<PlayBoard> {
               ),
               itemCount: 9,
               itemBuilder: (ctx, i) => InkWell(
-                onTap: () {
+                onTap: () async {
                   setState(() {
                     if (states[i] == 0) {
                       states[i] = 1;
@@ -50,10 +50,33 @@ class _PlayBoardState extends State<PlayBoard> {
                       }
                     }
                     var x = GameIntelligence.findBestMove(board);
-                    states[x[0] * 3 + x[1]] = 2;
-                    board[x[0]][x[1]] = 'x';
+                    var x2 = x[0] * 3 + x[1];
+                    if (x2 >= 0) {
+                      states[x2] = 2;
+                      board[x[0]][x[1]] = 'x';
+                    } else {
+                      states = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                      board = [
+                        ['_', '_', '_'],
+                        ['_', '_', '_'],
+                        ['_', '_', '_']
+                      ];
+                    }
                     print(board);
                   });
+
+                  var y = GameIntelligence.evaluate(board);
+                  if (y != 0) {
+                    await Future.delayed(Duration(seconds: 1));
+                    setState(() {
+                      states = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                      board = [
+                        ['_', '_', '_'],
+                        ['_', '_', '_'],
+                        ['_', '_', '_']
+                      ];
+                    });
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(
