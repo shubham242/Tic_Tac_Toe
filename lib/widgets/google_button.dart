@@ -1,8 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tic_tac_toe/screens/home.dart';
 
 class GoogleButton extends StatelessWidget {
-  final Function _signInWithGoogle;
-  GoogleButton(this._signInWithGoogle);
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser != null) {
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => Home(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,7 +31,7 @@ class GoogleButton extends StatelessWidget {
         padding: EdgeInsets.all(1.0),
         color: const Color(0xff4285F4),
         onPressed: () async {
-          await _signInWithGoogle();
+          await _signInWithGoogle(context);
         },
         child: new Row(
           mainAxisSize: MainAxisSize.min,
