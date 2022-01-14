@@ -16,6 +16,7 @@ class Txt extends StatelessWidget {
     return Text(
       title,
       textAlign: TextAlign.center,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: color,
         fontSize: size,

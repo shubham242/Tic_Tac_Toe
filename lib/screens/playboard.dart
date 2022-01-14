@@ -51,11 +51,11 @@ class _PlayBoardState extends State<PlayBoard> {
           body: Container(
             child: Column(
               children: [
-                Row(
+                Column(
                   children: [
-                    SizedBox(width: 10),
-                    Column(
+                    Row(
                       children: [
+                        SizedBox(width: 10),
                         Obx(
                           () => CircleAvatar(
                             backgroundColor: _controller.cpuPlaying.value
@@ -70,19 +70,9 @@ class _PlayBoardState extends State<PlayBoard> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Txt(
-                          FirebaseAuth.instance.currentUser!.displayName!
-                              .toUpperCase(),
-                          size: 20,
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    Txt('VS', size: 30),
-                    Spacer(),
-                    Column(
-                      children: [
+                        Spacer(),
+                        Txt('VS', size: 30),
+                        Spacer(),
                         Obx(
                           () => CircleAvatar(
                             backgroundColor: !_controller.cpuPlaying.value
@@ -97,11 +87,28 @@ class _PlayBoardState extends State<PlayBoard> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Txt('CPU', size: 20),
+                        SizedBox(width: 10),
                       ],
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        Container(
+                          constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * 0.4),
+                          child: Txt(
+                            FirebaseAuth.instance.currentUser!.displayName!
+                                .toUpperCase(),
+                            size: 14,
+                          ),
+                        ),
+                        Spacer(),
+                        Txt('CPU', size: 14),
+                        SizedBox(width: 40),
+                      ],
+                    )
                   ],
                 ),
                 SizedBox(
