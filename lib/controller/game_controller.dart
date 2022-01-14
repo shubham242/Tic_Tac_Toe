@@ -1,8 +1,12 @@
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tic_tac_toe/utilities/text.dart';
-import 'package:tic_tac_toe/widgets/bottom_sheet.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:tic_tac_toe/screens/home.dart';
+import 'package:tic_tac_toe/utilities/custom_colors.dart';
+import 'package:tic_tac_toe/widgets/text.dart';
+import 'package:tic_tac_toe/widgets/alert_sheet.dart';
 
 class GameController extends GetxController {
   var exit = false;
@@ -41,7 +45,7 @@ class GameController extends GetxController {
     if (board[x][y] == '_') {
       board[x][y] = 'o';
       cpuPlaying.value = true;
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: 300));
       if (isMovesLeft() && evaluate() == 0) {
         var move = await findBestMove();
         board[move[0]][move[1]] = 'x';
@@ -169,7 +173,7 @@ class GameController extends GetxController {
       }
     }
     Future.delayed(
-      Duration(seconds: 1),
+      Duration(milliseconds: 300),
     ).then((value) => cpuPlaying.value = false);
     return bestMove;
   }
@@ -179,7 +183,13 @@ class GameController extends GetxController {
 
     Get.dialog(
       AlertDialog(
+        backgroundColor: Colors.transparent,
         content: Container(
+          padding: EdgeInsets.all(30),
+          decoration: BoxDecoration(
+            color: ALERT_COLOR,
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -189,13 +199,17 @@ class GameController extends GetxController {
                     : 'assets/Images/tossloss.png',
                 height: 80,
               ),
-              Txt(rand == 0 ? 'You won the Toss' : 'You lost the Toss'),
+              SizedBox(height: 20),
+              Txt(
+                rand == 0 ? 'Toss Won' : 'Toss Lost',
+                size: 20,
+              ),
             ],
           ),
         ),
       ),
     );
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(Duration(milliseconds: 600));
     Navigator.pop(context);
     init(rand);
   }
@@ -225,5 +239,23 @@ class GameController extends GetxController {
     if (board[0][2] == board[1][2] &&
         board[1][2] == board[2][2] &&
         board[1][2] != '_') result.value = 8;
+  }
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser != null) {
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => Home(),
+        ),
+      );
+    }
   }
 }

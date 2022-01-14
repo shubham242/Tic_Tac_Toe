@@ -44,7 +44,7 @@ class MyPainter extends CustomPainter {
     }
     final paint = Paint()
       ..strokeCap = StrokeCap.round
-      ..color = Colors.cyanAccent.withOpacity(0.7)
+      ..color = Colors.cyanAccent
       ..strokeWidth = 15;
 
     canvas.drawLine(p1, p2, paint);

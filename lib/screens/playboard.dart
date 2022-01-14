@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tic_tac_toe/controller/game_controller.dart';
 import 'package:tic_tac_toe/utilities/custom_colors.dart';
-import 'package:tic_tac_toe/utilities/text.dart';
+import 'package:tic_tac_toe/widgets/text.dart';
+import 'package:tic_tac_toe/widgets/circle.dart';
+import 'package:tic_tac_toe/widgets/cross.dart';
 import 'package:tic_tac_toe/widgets/my_painer.dart';
 
 class PlayBoard extends StatefulWidget {
@@ -128,7 +130,7 @@ class _PlayBoardState extends State<PlayBoard> {
                                   _controller.playgame(i, context);
                               },
                               child: Card(
-                                color: LIGHT_COLOR,
+                                color: TILE_COLOR.withOpacity(0.9),
                                 margin: EdgeInsets.all(5),
                                 elevation: _controller.board[(i / 3).floor()]
                                             [i % 3] !=
@@ -139,36 +141,24 @@ class _PlayBoardState extends State<PlayBoard> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Container(
+                                  padding: _controller.board[(i / 3).floor()]
+                                              [i % 3] ==
+                                          'x'
+                                      ? EdgeInsets.all(10)
+                                      : EdgeInsets.all(2),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: AnimatedSwitcher(
-                                    duration: Duration(milliseconds: 500),
+                                    duration: Duration(milliseconds: 300),
                                     child: _controller.board[(i / 3).floor()]
                                                 [i % 3] ==
                                             'o'
-                                        ? Icon(
-                                            Icons.circle_outlined,
-                                            color: Colors.blueAccent[200],
-                                            size: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    3 -
-                                                35,
-                                          )
+                                        ? Circle()
                                         : _controller.board[(i / 3).floor()]
                                                     [i % 3] ==
                                                 'x'
-                                            ? Icon(
-                                                Icons.close_outlined,
-                                                color: Colors
-                                                    .deepOrangeAccent[700],
-                                                size: MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        3 -
-                                                    10,
-                                              )
+                                            ? Cross()
                                             : null,
                                   ),
                                 ),
